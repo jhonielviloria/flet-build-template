@@ -4,6 +4,12 @@ plugins {
     id "dev.flutter.flutter-gradle-plugin"
 }
 
+def keystoreProperties = new Properties()
+def keystorePropertiesFile = rootProject.file('key.properties')
+if (keystorePropertiesFile.exists()) {
+    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+}
+
 def localProperties = new Properties()
 def localPropertiesFile = rootProject.file('local.properties')
 if (localPropertiesFile.exists()) {
@@ -77,12 +83,21 @@ android {
     }
 
 // flet: android_signing {% if cookiecutter.options.android_signing %}
+//     signingConfigs {
+//         release {
+//             keyAlias System.getenv('FLET_ANDROID_SIGNING_KEY_ALIAS')
+//             keyPassword System.getenv('FLET_ANDROID_SIGNING_KEY_PASSWORD')
+//             storeFile System.getenv('FLET_ANDROID_SIGNING_KEY_STORE') ? file(System.getenv('FLET_ANDROID_SIGNING_KEY_STORE')) : null
+//             storePassword System.getenv('FLET_ANDROID_SIGNING_KEY_STORE_PASSWORD')
+//         }
+//     }
+
     signingConfigs {
         release {
-            keyAlias System.getenv('FLET_ANDROID_SIGNING_KEY_ALIAS')
-            keyPassword System.getenv('FLET_ANDROID_SIGNING_KEY_PASSWORD')
-            storeFile System.getenv('FLET_ANDROID_SIGNING_KEY_STORE') ? file(System.getenv('FLET_ANDROID_SIGNING_KEY_STORE')) : null
-            storePassword System.getenv('FLET_ANDROID_SIGNING_KEY_STORE_PASSWORD')
+            keyAlias keystoreProperties['keyAlias']
+            keyPassword keystoreProperties['keyPassword']
+            storeFile keystoreProperties['storeFile'] ? file(keystoreProperties['storeFile']) : null
+            storePassword keystoreProperties['storePassword']
         }
     }
 // flet: end of android_signing {% endif %}
