@@ -100,15 +100,10 @@ android {
             storePassword keystoreProperties['storePassword']
         }
     }
-// flet: end of android_signing {% endif %}
 
     buildTypes {
         release {
-// flet: android_signing {% if cookiecutter.options.android_signing %}
             signingConfig signingConfigs.release
-// {% else %}
-//             signingConfig signingConfigs.debug
-// flet: end of android_signing {% endif %}
         }
     }
 }
